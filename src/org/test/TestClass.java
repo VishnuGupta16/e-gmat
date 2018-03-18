@@ -120,9 +120,11 @@ public class TestClass {
 			while(true) {
 				if(tagIdVsQuestionId.get(TAG1).size() < 1 || tagIdVsQuestionId.get(TAG2).size() < 1 || tagIdVsQuestionId.get(TAG3).size() < 1 
 						|| tagIdVsQuestionId.get(TAG4).size() < 1 || tagIdVsQuestionId.get(TAG5).size() < 1 || tagIdVsQuestionId.get(TAG6).size() < 1
-						|| levelVsQuestionId.get(EASY).size() < 2 || levelVsQuestionId.get(MEDIUM).size() < 2 || levelVsQuestionId.get(HARD).size() < 2)
+						|| levelVsQuestionId.get(EASY).size() < 2 || levelVsQuestionId.get(MEDIUM).size() < 2 || levelVsQuestionId.get(HARD).size() < 2
+						|| questIdVsQuestion.size() < 10)
 					break;
 
+				//Only two 
 				for(String level : levelVsQuestionId.keySet()) {
 					count = 0;
 					currentTag = null;
@@ -181,7 +183,7 @@ public class TestClass {
 						for(String tagNotPresent : tagIdVsQuestionId.keySet()) {
 							if(tag.size() > 5)
 								break;
-							if(!tag.contains(tagNotPresent)) {
+							if(!tag.contains(tagNotPresent) && tagIdVsQuestionId.get(tagNotPresent).get(0) != null) {
 								questInCurrentSet.add(tagIdVsQuestionId.get(tagNotPresent).get(0));
 								currentTag = questIdVsQuestion.get(tagIdVsQuestionId.get(tagNotPresent).get(0)).getTagId();
 								tag.add(currentTag);
@@ -203,6 +205,16 @@ public class TestClass {
 								toBeRemoved.add(questId);
 								questIdVsQuestion.remove(questId);
 								levelVsCount.put(levelNotPresent, levelVsCount.get(levelNotPresent)+1);
+								questInCurrentSet.add(questId);
+								if(levelVsCount.get(levelNotPresent) > 2)
+									break;
+							}
+						}
+						if(!levelVsCount.containsKey(levelNotPresent) || levelVsCount.get(levelNotPresent) < 2) {
+							while(levelVsCount.get(levelNotPresent) < 2 && levelVsQuestionId.get(levelNotPresent).get(0) != null) {
+								questIdVsQuestion.remove(levelVsQuestionId.get(levelNotPresent).get(0));
+								levelVsCount.put(levelNotPresent, levelVsCount.get(levelNotPresent)+1);
+								questInCurrentSet.add(levelVsQuestionId.get(levelNotPresent).get(0));
 								if(levelVsCount.get(levelNotPresent) > 2)
 									break;
 							}
@@ -251,6 +263,8 @@ public class TestClass {
 
 					}
 				}
+				
+				
 
 				if(questInCurrentSet.size() == 10) {
 					min++;
